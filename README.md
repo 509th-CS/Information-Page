@@ -26,7 +26,7 @@ Create, edit, pin and delete plain-text posts; search and filter by category. Pi
 ## Password protection
 `gate.js` shows a password prompt before the page content is revealed; `app.js` is only loaded after a correct password.
 
-**Setup:** the default password is `509th`. Change it by computing a SHA-256 hex digest (`printf 'newpass' | sha256sum`) and replacing `PASSWORD_HASH` in `gate.js`. Changing the hash also signs everyone out. Incorrect passwords show an error message.
+**Setup:** the default password is `19754`. Change it by computing a SHA-256 hex digest (`printf 'newpass' | sha256sum`) and replacing `PASSWORD_HASH` in `gate.js`. Changing the hash also signs everyone out. Incorrect passwords show an error message.
 
 **10-session remember:** after a correct password, the browser remembers it in `localStorage` for 10 browser sessions (the session you log in during counts as 1); the prompt returns at the 11th. A new session is counted when a browser session starts (`sessionStorage`) and no other tab of the site was active in the last minute, so reloads and multiple tabs do not use up sessions. Change `MAX_SESSIONS` in `gate.js` to adjust.
 
