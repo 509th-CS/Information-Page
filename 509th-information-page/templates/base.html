@@ -1,0 +1,7 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ site_title }}</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body><div class="notice">PROTOTYPE · NOT AN APPROVED DoD SYSTEM · PUBLIC-RELEASE INFORMATION ONLY</div>
+<header><div class="brand"><span class="badge">509</span><div><small>CONNECT · INFORM · SUPPORT</small><div class="name">{{ site_title }}</div></div></div>
+{% if g.user %}<nav><a href="{{ url_for('home') }}">Information page</a>{% if g.user.role == 'admin' %}<a href="{{ url_for('editor') }}">+ New post</a>{% endif %}<form action="{{ url_for('logout') }}" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="subtle">Sign out</button></form></nav>{% endif %}</header>
+<main>{% for message in get_flashed_messages() %}<div class="message" role="status">{{ message }}</div>{% endfor %}{% block content %}{% endblock %}</main>
+<footer>Development prototype. No official affiliation or approval is asserted. Do not enter classified information, CUI, personnel records, or sensitive operational details.</footer></body></html>
