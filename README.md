@@ -1,6 +1,6 @@
 # Information-Page
 
-A backend-free static information board. Posts are stored in the browser's `localStorage`; there is no sign-in, database or server.
+A backend-free static information board. Posts are stored in the browser's `localStorage`; access is gated by a client-side password prompt; there is no database or server.
 
 ## Deployment (GitHub Pages)
 The authoritative site files are at the repository root: `index.html`, `app.js`, `style.css` (plus an empty `.nojekyll`).
@@ -22,3 +22,16 @@ Create, edit, pin and delete plain-text posts; search and filter by category. Pi
 
 ## Legacy folder
 `509th_github_pages_website/` is kept for reference (including unused Supabase-era `config.js`/`database.sql`). Root files are what Pages serves.
+
+## Password protection
+`gate.js` shows a password prompt before the page content is revealed; `app.js` is only loaded after a correct password.
+
+**Setup:** the default password is `509th`. Change it by computing a SHA-256 hex digest (`printf 'newpass' | sha256sum`) and replacing `PASSWORD_HASH` in `gate.js`. Changing the hash also signs everyone out. Incorrect passwords show an error message.
+
+**10-session remember:** after a correct password, the browser remembers it in `localStorage` for 10 browser sessions (the session you log in during counts as 1); the prompt returns at the 11th. A new session is counted when a browser session starts (`sessionStorage`) and no other tab of the site was active in the last minute, so reloads and multiple tabs do not use up sessions. Change `MAX_SESSIONS` in `gate.js` to adjust.
+
+**Limitations:**
+- This is a static site, so protection is client-side only: it is a deterrent, not real security. The hash, HTML and scripts are publicly downloadable, and anyone can edit their own `localStorage`. Do not store sensitive data; use a real server or access-controlled hosting for that.
+- Clearing site data or private/incognito windows resets the counter, so the password is requested again.
+- If storage is blocked, the password is requested on every visit.
+- Hashing uses `crypto.subtle`, which needs HTTPS or `localhost` (GitHub Pages is fine).
