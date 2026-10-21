@@ -3,7 +3,7 @@
   const $ = id => document.getElementById(id);
   const tell = message => { $('status').textContent = message; };
   const STORAGE_KEY = 'information-page-posts-v1';
-  const categories = ['General','Announcements','Career & Training','Benefits & Support','Community','Resources'];
+  const categories = ['Information','News','Help','Resources','Newcomers'];
   for (const name of categories) {
     for (const id of ['filter','post-category']) {
       const option = document.createElement('option'); option.value = name; option.textContent = name; $(id).append(option);
@@ -23,13 +23,20 @@
   function sortPosts() {
     posts.sort((a,b) => (Number(!!b.pinned) - Number(!!a.pinned)) || (new Date(b.updated_at) - new Date(a.updated_at)));
   }
-  function load() { posts = readStore(); sortPosts(); render(); }
+  function normalizeCategory(category) {
+    return categories.includes(category) ? category : 'Information';
+  }
+  function load() {
+    posts = readStore().map(post => ({ ...post, category: normalizeCategory(post.category) }));
+    sortPosts();
+    render();
+  }
   function hideEditor() { $('editor').hidden = true; $('post-form').reset(); editing = null; }
   function showEditor(post = null) {
     editing = post ? post.id : null;
     $('post-title').value = post ? post.title : '';
     $('post-body').value = post ? post.body : '';
-    $('post-category').value = post ? post.category : 'General';
+    $('post-category').value = post ? normalizeCategory(post.category) : 'Information';
     $('post-pinned').checked = post ? !!post.pinned : false;
     $('editor-title').textContent = post ? 'Edit post' : 'Create post';
     $('editor').hidden = false; $('editor').scrollIntoView({behavior:'smooth'});
@@ -68,7 +75,7 @@
     try {
       if (!title || !body) throw new Error('Title and information are required.');
       const now = new Date().toISOString();
-      const fields = {title, body, category:$('post-category').value, pinned:$('post-pinned').checked, updated_at:now};
+      const fields = {title, body, category:normalizeCategory($('post-category').value), pinned:$('post-pinned').checked, updated_at:now};
       const existing = editing && posts.find(p => p.id === editing);
       if (existing) Object.assign(existing, fields);
       else posts.push(Object.assign({id:newId(), created_at:now}, fields));
