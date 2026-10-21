@@ -1,7 +1,7 @@
 "use strict";
 (function () {
-  // SHA-256 hex of the site password. Default password: 509th  (CHANGE IT, see README).
-  const PASSWORD_HASH = 'b0e882e28543d56926bbd92585e5aaa6178cd564025c46e9961b96abd47ee446';
+  // SHA-256 hex of the site password. Default password: 19754  (CHANGE IT, see README).
+  const PASSWORD_HASH = '1f7ffc806e930ca001f8a1f889ce71d734ac13ae727dcbddac314198920b6f2e';
   const MAX_SESSIONS = 10;
   const KEY = 'information-page-auth-v1';
   const SESSION_FLAG = 'information-page-session-counted';
